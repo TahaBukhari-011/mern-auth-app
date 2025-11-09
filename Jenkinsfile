@@ -9,7 +9,8 @@ pipeline {
         stage('Clone Repository') {
             steps {
                 // Pull the latest code from GitHub
-                git branch: 'main', url: 'https://github.com/<your-username>/<your-repo-name>.git'
+                git branch: 'main', url: 'https://github.com/TahaBukhari-011/mern-auth-app.git'
+
             }
         }
 
@@ -49,4 +50,5 @@ pipeline {
         }
     }
 }
+
 
