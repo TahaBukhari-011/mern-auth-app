@@ -4,49 +4,53 @@ services:
   # MongoDB Service
   mongodb:
     image: mongo:6.0
-    container_name: mern-mongodb
+    container_name: mern2-mongodb
     ports:
-      - "27017:27017"
+      - "27018:27017"
     volumes:
-      - mongodb_data:/data/db  # Volume for data persistence
+      - mongodb_data:/data/db
     environment:
       - MONGO_INITDB_DATABASE=mern-auth
     networks:
-      - mern-network
+      - mern2-network
     restart: unless-stopped
 
   # Backend Service
   backend:
-    build: 
-      context: ./backend
-      dockerfile: Dockerfile
-    container_name: mern-backend
+    image: node:18
+    container_name: mern2-backend
+    working_dir: /app/backend
+    volumes:
+      - ./backend:/app/backend
     ports:
-      - "5000:5000"
+      - "5001:5000"
     environment:
       - NODE_ENV=production
       - MONGODB_URI=mongodb://mongodb:27017/mern-auth
-      - JWT_SECRET=production-jwt-secret-key-2024-ec2-deployment
+      - JWT_SECRET=jenkins-pipeline-secret
       - JWT_EXPIRE=7d
-      - CLIENT_URL=http://localhost
+      - CLIENT_URL=http://localhost:8082
     depends_on:
       - mongodb
     networks:
-      - mern-network
+      - mern2-network
+    command: bash -c "npm install && npm start"
     restart: unless-stopped
 
   # Frontend Service
   frontend:
-    build:
-      context: ./frontend
-      dockerfile: Dockerfile
-    container_name: mern-frontend
+    image: node:18
+    container_name: mern2-frontend
+    working_dir: /app/frontend
+    volumes:
+      - ./frontend:/app/frontend
     ports:
-      - "80:80"
+      - "8082:3000"
     depends_on:
       - backend
     networks:
-      - mern-network
+      - mern2-network
+    command: bash -c "npm install && npm start"
     restart: unless-stopped
 
 # Volumes for data persistence
@@ -56,5 +60,5 @@ volumes:
 
 # Networks
 networks:
-  mern-network:
+  mern2-network:
     driver: bridge
