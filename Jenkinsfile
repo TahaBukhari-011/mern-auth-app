@@ -40,7 +40,7 @@ pipeline {
             echo '✅ Pipeline finished successfully!'
         }
         failure {
-            echo '❌ Pipeline failed!'
+            echo ' Pipeline failed!'
         }
         always {
             echo 'Cleaning up if needed...'
@@ -49,3 +49,4 @@ pipeline {
         }
     }
 }
+
